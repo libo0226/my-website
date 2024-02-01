@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps Example</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAg3sqP0vQBjayAi-3oWOCMowrfMlT2mJg&callback=initMap" async defer></script>
+	
+	
+	<script>
+	var styles = [
+				{
+					featureType: 'poi',
+					elementType: 'labels',
+					stylers: [{ visibility: 'off' }] // 關閉 POI 標籤
+				},
+				
+				{
+					featureType: 'transit',
+					elementType: 'labels',
+					stylers: [{ visibility: 'off' }] // 關閉交通工具標籤
+				}
+			];
+        function initMap() {
+		 // 定義地圖的風格
+            
+            // 在這裡初始化地圖
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat:22.743344, lng:120.327598},
+                zoom: 15,
+				 styles: styles
+				 // 使用 styles 變數作為風格設置
+            });
+			// 使用 fetch 從後端獲取資料
+            data.forEach(row => {
+                const marker = new google.maps.Marker({
+                    position: { lat: parseFloat(row.Latitude), lng: parseFloat(row.Longitude) },
+                    map: map,
+                    title: row.Name
+                });
+				const circle = new google.maps.Circle({
+					map: map,
+					center: { lat: parseFloat(row.Latitude), lng: parseFloat(row.Longitude) },
+					radius: 200, // 半徑單位是公尺
+					fillColor: '#FF0000', // 圈內填充顏色
+					fillOpacity: 0.05,
+					strokeColor: '#FF0000', // 圈外邊框顏色
+					strokeOpacity: 0.8,
+					strokeWeight: 2
+				});
+				const circle2 = new google.maps.Circle({
+					map: map,
+					center: { lat: parseFloat(row.Latitude), lng: parseFloat(row.Longitude) },
+					radius: 50, // 半徑單位是公尺
+					fillColor: '#3498db', // 圈內填充顏色
+					fillOpacity: 0.3,
+					strokeColor: '#3498db', // 圈外邊框顏色
+					strokeOpacity: 0.8,
+					strokeWeight: 2
+				});
+            });
+			function receiveLocation(latitude,longitude){
+				map.setCenter({lat:latitude,lng:longitude});
+				
+				var location = new google.maps.LatLng(latitude,longitude);
+				addMarker(location);
+			}
+        }
+        
+    </script>
+	<style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        #map {
+            width: 75%;
+            height: 100%;
+        }
+
+        #dbBrowser {
+            width: 25%;
+            height: 100%;
+            background-color: #f0f0f0;
+            overflow: auto;
+            padding: 10px;
+        }
+    </style>
+	
+</head>
+<body>
+	<a href="http://163.18.53.140/C:/Users/Laptop/Templates/templates/index.html"></a>
+
+    <div id="map"></div>
+    <div id="dbBrowser">
+        <!-- 在這裡添加 DB Browser 的內容 -->
+        <h2>DATA SHOW BUT NOTHING</h2>
+		<ul id="data-container"></ul>
+        <!-- 這裡可以顯示資料表、查詢結果等 -->
+    </div>
+	<script>
+    const data = {{ data | tojson | safe }};
+    const container = document.getElementById('data-container');
+    let html = '';
+
+    container.innerHTML = html;
+</script>
+
+</body>
+</html>
